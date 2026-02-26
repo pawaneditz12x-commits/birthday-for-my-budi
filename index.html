@@ -10,17 +10,27 @@ body {
   margin:0;
   font-family: Arial, sans-serif;
   text-align:center;
-  background: linear-gradient(to right, #ff758c, #ff7eb3);
   color:white;
-  overflow-x:hidden;
+  overflow:hidden;
+  background: radial-gradient(circle at top, #ff7eb3, #ff4d6d);
+  animation: fadeIn 2s ease-in;
+}
+
+/* Fade In Animation */
+@keyframes fadeIn {
+  from { opacity:0; }
+  to { opacity:1; }
 }
 
 .container {
   padding:40px 20px;
+  position:relative;
+  z-index:2;
 }
 
 h1 {
-  font-size:34px;
+  font-size:36px;
+  text-shadow:0 0 15px rgba(255,255,255,0.8);
 }
 
 button {
@@ -34,69 +44,67 @@ button {
   margin-top:20px;
 }
 
+/* Typewriter Text */
 #letter {
   margin-top:30px;
   font-size:20px;
   max-width:700px;
-  margin-left:auto;
-  margin-right:auto;
+  margin:auto;
   min-height:120px;
 }
 
-.gallery {
-  margin-top:40px;
+/* Sparkle Background */
+.sparkle {
+  position:absolute;
+  width:4px;
+  height:4px;
+  background:white;
+  border-radius:50%;
+  animation: twinkle 3s infinite alternate;
 }
 
-.gallery img {
-  width:90%;
-  max-width:280px;
-  margin:10px;
-  border-radius:15px;
-  box-shadow:0 10px 20px rgba(0,0,0,0.3);
+@keyframes twinkle {
+  from { opacity:0.2; }
+  to { opacity:1; }
 }
 
-.heart {
-  position: fixed;
-  bottom: -20px;
-  font-size: 20px;
-  animation: floatUp 5s linear infinite;
+/* Confetti */
+.confetti {
+  position:fixed;
+  width:8px;
+  height:8px;
+  background:yellow;
+  top:-10px;
+  animation: fall 4s linear infinite;
 }
 
-@keyframes floatUp {
-  0% { transform: translateY(0); opacity:1; }
-  100% { transform: translateY(-100vh); opacity:0; }
+@keyframes fall {
+  to { transform: translateY(100vh) rotate(360deg); }
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="container">
-  <h1>Happy Birthday My Beautiful Budi ❤️</h1>
-
+  <h1>🎉 Happy Birthday My Beautiful Budi ❤️</h1>
   <button onclick="startSurprise()">Open My Heart 💖</button>
-  <button onclick="playMusic()">Play Music 🎵</button>
-
   <div id="letter"></div>
-
-  <div class="gallery">
-    <img src="photo1.JPG" alt="Memory 1">
-    <img src="photo2.JPG" alt="Memory 2">
-    <img src="photo3.JPG" alt="Memory 3">
-  </div>
 </div>
 
-<audio id="bgMusic" loop>
+<audio id="bgMusic" autoplay loop>
   <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-const message = "Happy Birthday to the love of my life ❤️\n\nYou are my heart, my happiness, my everything.\nEvery day with you feels magical.\nI love you today, tomorrow, and forever.\n\nForever Yours 💕";
+const message = "Happy Birthday to the love of my life ❤️\n\nYou are my heart, my happiness, my everything.\nOn this special day, I celebrate YOU.\nI love you today, tomorrow, and forever.\n\nForever Yours 💕";
 
 let i = 0;
 
 function startSurprise() {
   typeWriter();
+  launchConfetti();
 }
 
 function typeWriter() {
@@ -108,25 +116,37 @@ function typeWriter() {
   }
 }
 
-function playMusic() {
-  document.getElementById("bgMusic").play();
+/* Auto music fix */
+const music = document.getElementById("bgMusic");
+window.addEventListener("load", () => {
+  music.play().catch(()=>{});
+});
+document.addEventListener("click", () => {
+  music.play();
+}, { once:true });
+
+/* Sparkles */
+for (let i=0; i<50; i++) {
+  let sparkle = document.createElement("div");
+  sparkle.className = "sparkle";
+  sparkle.style.top = Math.random()*100 + "vh";
+  sparkle.style.left = Math.random()*100 + "vw";
+  sparkle.style.animationDuration = (Math.random()*3+2)+"s";
+  document.body.appendChild(sparkle);
 }
 
-// Floating hearts
-function createHeart() {
-  const heart = document.createElement("div");
-  heart.classList.add("heart");
-  heart.innerHTML = "💖";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = Math.random() * 20 + 15 + "px";
-  document.body.appendChild(heart);
-
-  setTimeout(() => {
-    heart.remove();
-  }, 5000);
+/* Confetti */
+function launchConfetti(){
+  for(let i=0;i<80;i++){
+    let conf = document.createElement("div");
+    conf.className="confetti";
+    conf.style.left=Math.random()*100+"vw";
+    conf.style.background=`hsl(${Math.random()*360},100%,50%)`;
+    conf.style.animationDuration=(Math.random()*3+2)+"s";
+    document.body.appendChild(conf);
+    setTimeout(()=>conf.remove(),4000);
+  }
 }
-
-setInterval(createHeart, 500);
 </script>
 
 </body>
